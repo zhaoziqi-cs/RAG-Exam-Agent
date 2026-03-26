@@ -1,7 +1,13 @@
 # RAG Exam Agent
 
 一个面向**企业知识库自动答题 / 选择题问答**场景的 RAG 项目。  
-当前版本已完成基础工程结构、PDF 入库与切块、向量化存储、基础语义检索模块，后续将继续补全 Query Augmentation、LLM Answering 和 End-to-End QA Pipeline。
+
+已完成 PDF 入库与切块
+已完成向量化存储与语义检索
+已完成 augmentor
+已完成 qa_pipeline 串联
+已完成单题冒烟测试
+待完成批量评测与效果优化
 
 ---
 
