@@ -51,7 +51,7 @@
 ```
  ##  **📁 项目结构（第一版）**
 
-```JSON
+```
 rag_exam_agent/
 ├── data/
 ├── src/
@@ -78,6 +78,24 @@ rag_exam_agent/
 
 ingestion.py
 1. 读取 data/ 下的多个 PDF
+
 2. 做文本清洗和切块
+
 3. 补齐 metadata
+
 4. 写入向量库 Chroma
+
+## 技术栈
+
+- Python
+- LangChain
+- Chroma
+- HuggingFace Embeddings
+- Sentence Transformers
+- BGE (`BAAI/bge-small-zh-v1.5`)
+
+后续计划接入：
+
+- OpenAI-compatible LLM API / Qwen API
+- Prompt Engineering
+- Structured Output Parsing

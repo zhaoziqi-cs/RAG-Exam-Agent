@@ -1,10 +1,11 @@
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
 from src.config import settings
+from src.schemas import RetrievedChunk
 
 class VectorRetriever:
     """
@@ -61,25 +62,24 @@ class VectorRetriever:
         )
 
     @staticmethod
-    def _format_result(doc: Any, score: Optional[float] = None) -> Dict[str, Any]:
+    def _format_result(doc: Any, score: Optional[float] = None) -> RetrievedChunk:
         """
-        将 LangChain 的 Document 统一转成干净的 dict，
-        方便后续 augmentor / pipeline 使用。
+        将 LangChain 的 Document 统一转成 RetrievedChunk，
+        方便后续 augmentor / pipeline 直接使用标准数据结构。
         """
         metadata = doc.metadata or {}
         source = metadata.get("source", "")
         source_name = Path(source).name if source else "unknown"
 
-        return {
-            "content": doc.page_content,
-            "metadata": metadata,
-            "source": source_name,
-            "page": metadata.get("page"),
-            "chunk_id": metadata.get("chunk_id"),
-            "score": score,
-        }
+        return RetrievedChunk(
+            chunk_id=metadata.get("chunk_id", ""),
+            text=doc.page_content,
+            source=source_name,
+            score=float(score) if score is not None else 0.0,
+            metadata=metadata,
+        )
     
-    def retrieve(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
+    def retrieve(self, query: str, top_k: int = 5) -> List[RetrievedChunk]:
         """
         执行语义检索，返回 top-k 结果。
         """
@@ -101,7 +101,7 @@ class VectorRetriever:
         
         return results
     
-    def print_results(self, results: List[Dict[str, Any]]) -> None:
+    def print_results(self, results: List[RetrievedChunk]) -> None:
         """
         方便调试：把检索结果打印出来看看是否合理。
         """
@@ -111,11 +111,11 @@ class VectorRetriever:
 
         for i, item in enumerate(results, start=1):
             print(f"\n===== Top {i} =====")
-            print(f"  Source    : {item['source']}")
-            print(f"  Page      : {item.get('page', 'N/A')}")
-            print(f"  Chunk ID  : {item.get('chunk_id', 'N/A')}")
-            print(f"  Score     : {item.get('score', 'N/A'):.4f}")
-            print(f"  Content   : {item['content'][:100]}...")
+            print(f"  Source    : {item.source}")
+            print(f"  Page      : {item.metadata.get('page', 'N/A')}")
+            print(f"  Chunk ID  : {item.chunk_id or 'N/A'}")
+            print(f"  Score     : {item.score:.4f}")
+            print(f"  Content   : {item.text[:100]}...")
             print("=" * 50)
 
 if __name__ == "__main__":

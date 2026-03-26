@@ -1,16 +1,15 @@
 from openai import OpenAI
 import os
 
-api_key = os.getenv("DASHSCOPE_API_KEY")
-if not api_key:
-    raise ValueError("环境变量 DASHSCOPE_API_KEY 未设置")
-
-client = OpenAI(
-    api_key=api_key,
+def call_llm(prompt: str) -> str:
+    print("[LLM] 开始初始化客户端...")
+    if not os.getenv("DASHSCOPE_API_KEY"):
+        raise ValueError("环境变量 DASHSCOPE_API_KEY 未设置")
+    client = OpenAI(
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
 )
-
-def call_llm(prompt):
+    print("[LLM] 客户端初始化完成，开始请求模型...")
     response = client.chat.completions.create(
         model="qwen-plus",   # 或 qwen-turbo
         messages=[
@@ -19,4 +18,5 @@ def call_llm(prompt):
         ],
         temperature=0
     )
+    print("[LLM] 收到模型返回。")
     return response.choices[0].message.content
