@@ -7,7 +7,7 @@
 已完成 augmentor
 已完成 qa_pipeline 串联
 已完成单题冒烟测试
-待完成批量评测与效果优化
+新增多题解析，后续待完成批量评测与效果优化
 
 ---
 
@@ -55,7 +55,7 @@
                     ↓
       自动化 or 人工点击
 ```
- ##  **📁 项目结构（第一版）**
+ ##  **📁 项目结构**
 
 ```
 rag_exam_agent/
@@ -66,6 +66,7 @@ rag_exam_agent/
 │   ├── augmentor.py        # 增强层：query/context增强
 │   ├── llm.py              # LLM API 调用
 │   ├── qa_pipeline.py      # 组装总流程
+│   ├── parser.py           # 新增多题解析
 │   └── schemas.py          # 输入输出结构定义（后面可选）
 ├── vector_store/
 ├── app.py

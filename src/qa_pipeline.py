@@ -90,8 +90,9 @@ class RAGQAPipeline:
         """
         把题目 + 选项 + 增强后的上下文，拼成最终给 LLM 的 prompt。
         """
-        options_text = "\n".join(f"{chr(ord('A')+i)}. {option}"
-                                for i, option in enumerate(exam_question.options)
+        options_text = "\n".join(
+                self._format_option(i, option)
+                for i, option in enumerate(exam_question.options)
         )
         question_type_text = (
             "单选题（只能选择一个答案）"
@@ -125,6 +126,25 @@ class RAGQAPipeline:
   "source": "来源文件名 + 页码（如果能判断）"
 }}
 """
+    
+    @staticmethod
+    def _format_option(index: int, option: str) -> str:
+        """
+        兼容两种输入：
+        1) "平衡债权与负债比例"
+        2) "A、平衡债权与负债比例" / "A. 平衡债权与负债比例"
+        """
+        label = chr(ord("A") + index)
+        option_text = str(option).strip()
+
+        option_text = re.sub(
+            r"^[a-zA-ZＡ-Ｚ](?:[\.、．\)\）:：]\s*|\s+)",
+            "",
+            option_text,
+            count=1,
+        ).strip()
+
+        return f"{label}. {option_text}"
         
     @staticmethod
     def parse_llm_output(output: str) -> Dict:
