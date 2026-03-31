@@ -58,10 +58,28 @@ class RAGQAPipeline:
                 "question_id": exam_question.question_id,
                 "question_type": exam_question.question_type,
                 "retrieval_query": retrieval_query,
+                "retrieved_chunks_debug": [
+                self._chunk_to_dict(chunk) for chunk in retrieved_chunks
+                ],
+                "used_references_debug": [
+                self._chunk_to_dict(chunk) for chunk in augmented_context.references
+                ],
+                "augmented_context": augmented_context.context,
+                "final_prompt": prompt,
                 "raw_llm_output": raw_output,
             },
         )
     
+    @staticmethod
+    def _chunk_to_dict(chunk) -> Dict:
+        return {
+            "chunk_id": getattr(chunk, "chunk_id", ""),
+            "source": getattr(chunk, "source", ""),
+            "score": getattr(chunk, "score", None),
+            "text": getattr(chunk, "text", ""),
+            "metadata": getattr(chunk, "metadata", {}) or {},
+        }
+
     def answer_from_raw(
             self,
         question: str,

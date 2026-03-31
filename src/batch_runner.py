@@ -119,6 +119,7 @@ class BatchQARunner:
         question: ExamQuestion,
         qa_result: QAResult,
     ) -> Dict[str, Any]:
+        qa_meta = qa_result.metadata or {}
         return {
             "question_id": question.question_id,
             "question_type": question.question_type,
@@ -129,6 +130,16 @@ class BatchQARunner:
             "reason": qa_result.reason,
             "source": qa_result.source,
             "retrieved_chunks_count": len(qa_result.retrieved_chunks),
+
+            # 直接摊平的 debug 字段
+            "retrieval_query": qa_meta.get("retrieval_query", ""),
+            "augmented_context": qa_meta.get("augmented_context", ""),
+            "final_prompt": qa_meta.get("final_prompt", ""),
+            "raw_llm_output": qa_meta.get("raw_llm_output", ""),
+            "retrieved_chunks_debug": qa_meta.get("retrieved_chunks_debug", []),
+            "used_references_debug": qa_meta.get("used_references_debug", []),
+
+            # 原始 metadata 也保留，方便后续兼容
             "qa_metadata": qa_result.metadata,
         }
 

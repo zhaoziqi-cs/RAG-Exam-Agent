@@ -180,7 +180,7 @@ if __name__ == "__main__":
     from src.batch_runner import BatchQARunner
     runner = BatchQARunner()
     batch_result = runner.run_from_file(
-        file_path="../question/input.txt",
+        file_path="../question/error_input.txt",
         limit=None,
         verbose=True,
     )
