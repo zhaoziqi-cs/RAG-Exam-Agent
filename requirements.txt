@@ -4,3 +4,12 @@ langchain-community
 langchain-text-splitters
 langchain-huggingface
 langchain-chroma
+langchain-pymupdf4llm
+
+pypdf
+sentence-transformers
+cryptography>=36.0.0
+Pillow>=9.1
+matplotlib
+
+openai

@@ -35,6 +35,8 @@ class Settings:
     # =========================
     # 4. 文本切分配置
     # =========================
+    
+    # 旧文本（PyPDFLoader）默认分隔符
     chunk_size: int = 500
     chunk_overlap: int = 100
     separators: Tuple[str, ...] = (
@@ -48,6 +50,23 @@ class Settings:
         "，",
         " ",
         "",
+    )
+
+    # 旧文本（PyPDFLoader）默认分隔符
+    # 新文本（PyMuPDF4LLM / markdown 风格）优先按结构切
+    markdown_separators: Tuple[str, ...] = (
+        "\n# ",
+        "\n## ",
+        "\n### ",
+        "\n#### ",
+        "\n\n",
+        "\n- ",
+        "\n* ",
+        "\n1. ",
+        "\n2. ",
+        "\n3. ",
+        "\n",
+        "。", "！", "？", "；", "：", "，", " ", ""
     )
 
     # =========================
@@ -66,6 +85,11 @@ class Settings:
     # =========================
     allowed_question_types: Tuple[str, ...] = ("single", "multiple")
 
+    # =========================
+    # 8. PDF Loader 配置
+    # =========================
+    pdf_loader_backend: str = "pypdfloader"   # 可选: pypdfloader / pymupdf4llm
+
     def __post_init__(self) -> None:
         self.data_dir = self.project_root / "data"
         self.vector_store_dir = self.project_root / "vector_store"
@@ -77,6 +101,9 @@ class Settings:
         self.embedding_device = os.getenv(
             "EMBEDDING_DEVICE", self.embedding_device
         )
+        self.pdf_loader_backend = os.getenv(
+            "PDF_LOADER_BACKEND", self.pdf_loader_backend
+        ).lower()
 
     def make_dirs(self) -> None:
         """确保必要的目录存在"""

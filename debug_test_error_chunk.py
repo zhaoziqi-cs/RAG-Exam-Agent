@@ -4,7 +4,7 @@ from src.config import settings
 
 pdf_path = settings.data_dir / "财务资金体系应知应会核心要点汇编2025年9月.pdf"
 
-raw_docs = load_pdf_documents(pdf_path)
+raw_docs = load_pdf_documents(pdf_path, backend="pymupdf4llm")
 chunks = split_documents(raw_docs)
 
 page2_chunks = [
