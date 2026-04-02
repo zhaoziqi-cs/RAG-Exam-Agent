@@ -6,3 +6,4 @@ __pycache__/
 vector_store/
 data/
 *.txt
+.vscode

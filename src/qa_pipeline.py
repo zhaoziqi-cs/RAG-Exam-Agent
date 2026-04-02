@@ -6,6 +6,7 @@ from src.augmentor import ExamAugmentor
 from src.config import settings
 from src.llm import call_llm
 from src.retriever import VectorRetriever
+from src.hybrid_retriever import HybridRetriever
 from src.schemas import AugmentedContext, ExamQuestion, QAResult
 
 class RAGQAPipeline:
@@ -26,7 +27,12 @@ class RAGQAPipeline:
             llm_fn: Optional[Callable[[str], str]] = None,
             top_k: int = settings.top_k,
     ) -> None:
-        self.retriever = retriever or VectorRetriever()
+        if retriever is not None:
+            self.retriever = retriever
+        elif settings.use_hybrid_retrieval:
+            self.retriever = HybridRetriever()
+        else:
+            self.retriever = VectorRetriever()
         self.augmentor = augmentor or ExamAugmentor()
         self.llm_fn = llm_fn or call_llm
         self.top_k = top_k

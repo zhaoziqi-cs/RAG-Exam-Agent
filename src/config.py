@@ -35,7 +35,6 @@ class Settings:
     # =========================
     # 4. 文本切分配置
     # =========================
-    
     # 旧文本（PyPDFLoader）默认分隔符
     chunk_size: int = 500
     chunk_overlap: int = 100
@@ -52,7 +51,6 @@ class Settings:
         "",
     )
 
-    # 旧文本（PyPDFLoader）默认分隔符
     # 新文本（PyMuPDF4LLM / markdown 风格）优先按结构切
     markdown_separators: Tuple[str, ...] = (
         "\n# ",
@@ -75,6 +73,21 @@ class Settings:
     top_k: int = 5
     score_threshold: float = 0.0
 
+    # 是否启用混合检索
+    use_hybrid_retrieval: bool = True
+
+    # Hybrid 各阶段 top-k
+    vector_top_k: int = 5
+    bm25_top_k: int = 5
+    hybrid_top_k: int = 8
+
+    # BM25 参数
+    bm25_k1: float = 1.5
+    bm25_b: float = 0.75
+
+    # 融合重排参数：双路都命中时额外奖励
+    hybrid_fusion_bonus: float = 1.0
+
     # =========================
     # 6. Context Augmentation 配置
     # =========================
@@ -88,7 +101,7 @@ class Settings:
     # =========================
     # 8. PDF Loader 配置
     # =========================
-    pdf_loader_backend: str = "pypdfloader"   # 可选: pypdfloader / pymupdf4llm
+    pdf_loader_backend: str = "pymupdf4llm"   # 可选: pypdfloader / pymupdf4llm
 
     def __post_init__(self) -> None:
         self.data_dir = self.project_root / "data"
